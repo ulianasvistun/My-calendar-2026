@@ -1,6 +1,6 @@
 // === Дата и язык ===
 let currentDate = new Date();
-let currentMonth = currentDate.getMonth();
+let currentMonth = currentDate.getMonth(); // 0-11
 let currentDay = currentDate.getDate();
 let currentLanguage = localStorage.getItem("lang") || "en";
 
@@ -31,14 +31,62 @@ const monthImages = [
 
 // === Стихи месяца ===
 const monthlyPoems = {
-  en: {0:"The air stands still...",1:"Cold sharpens thought...",2:"The earth exhales...",3:"The days grow careless...",4:"Everything begins to listen...",5:"Light stretches endlessly...",6:"Warm air carries unsaid things...",7:"Everything ripens at once...",8:"The world becomes clearer...",9:"Wind interrupts thoughts...",10:"The light withdraws...",11:"Time folds inward..."},
-  ru: {0:"Воздух замирает...",1:"Холод обостряет мысли...",2:"Земля выдыхает...",3:"Дни становятся беспечными...",4:"Всё начинает слушать...",5:"Свет растягивается бесконечно...",6:"Тёплый воздух несёт несказанное...",7:"Всё созревает сразу...",8:"Мир становится яснее...",9:"Ветер прерывает мысли...",10:"Свет уходит...",11:"Время сворачивается внутрь..."}
+  en: {
+    0: "The air stands still...",
+    1: "Cold sharpens thought...",
+    2: "The earth exhales...",
+    3: "The days grow careless...",
+    4: "Everything begins to listen...",
+    5: "Light stretches endlessly...",
+    6: "Warm air carries unsaid things...",
+    7: "Everything ripens at once...",
+    8: "The world becomes clearer...",
+    9: "Wind interrupts thoughts...",
+    10: "The light withdraws...",
+    11: "Time folds inward..."
+  },
+  ru: {
+    0: "Воздух замирает...",
+    1: "Холод обостряет мысли...",
+    2: "Земля выдыхает...",
+    3: "Дни становятся беспечными...",
+    4: "Всё начинает слушать...",
+    5: "Свет растягивается бесконечно...",
+    6: "Тёплый воздух несёт несказанное...",
+    7: "Всё созревает сразу...",
+    8: "Мир становится яснее...",
+    9: "Ветер прерывает мысли...",
+    10: "Свет уходит...",
+    11: "Время сворачивается внутрь..."
+  }
 };
 
 // === Гороскоп Льва ===
 const leoHoroscope = {
-  en: ["Today is about calm confidence.","Focus on what truly matters.","Let reflection guide your choices.","Your energy is noticed.","Finish what you’ve postponed.","Lead with patience.","Creativity flows best without forcing results.","Someone may seek your reassurance.","Trust your intuition.","Today favors clear boundaries."],
-  ru: ["Сегодня день спокойной уверенности.","Сфокусируйся на действительно важном.","Пусть размышления направляют твои шаги.","Твоя энергия замечается.","Закончите то, что откладывали.","Веди мягко.","Творчество течет лучше без насилия над результатом.","Кто-то ищет твоего ободрения.","Доверяй интуиции.","Сегодня важны ясные границы."]
+  en: [
+    "Today is about calm confidence.",
+    "Focus on what truly matters.",
+    "Let reflection guide your choices.",
+    "Your energy is noticed.",
+    "Finish what you’ve postponed.",
+    "Lead with patience.",
+    "Creativity flows best without forcing results.",
+    "Someone may seek your reassurance.",
+    "Trust your intuition.",
+    "Today favors clear boundaries."
+  ],
+  ru: [
+    "Сегодня день спокойной уверенности.",
+    "Сфокусируйся на действительно важном.",
+    "Пусть размышления направляют твои шаги.",
+    "Твоя энергия замечается.",
+    "Закончите то, что откладывали.",
+    "Веди мягко.",
+    "Творчество течет лучше без насилия над результатом.",
+    "Кто-то ищет твоего ободрения.",
+    "Доверяй интуиции.",
+    "Сегодня важны ясные границы."
+  ]
 };
 
 // === Сильные дни Льва ✦ ===
@@ -51,76 +99,4 @@ const poemText = document.getElementById("poemText");
 const horoscopeEl = document.getElementById("horoscope");
 const languageToggle = document.getElementById("languageToggle");
 const calendarGrid = document.getElementById("calendarGrid");
-const backgroundEl = document.querySelector(".background");
-
-// === Создание сетки календаря ===
-function createCalendar() {
-  calendarGrid.innerHTML = '';
-  let daysInMonth = new Date(currentDate.getFullYear(), currentMonth+1, 0).getDate();
-  let firstDay = new Date(currentDate.getFullYear(), currentMonth, 1).getDay();
-
-  for(let i=0;i<firstDay;i++){
-    const emptyEl = document.createElement('div');
-    calendarGrid.appendChild(emptyEl);
-  }
-
-  for(let i=1;i<=daysInMonth;i++){
-    const dayEl = document.createElement('div');
-    dayEl.classList.add('day');
-    dayEl.textContent = i;
-    dayEl.dataset.day = i;
-    if(leoPowerDays.includes(i)) dayEl.classList.add('power-day');
-    if(i === currentDay) dayEl.classList.add('today');
-    dayEl.onclick = () => selectDay(i);
-    calendarGrid.appendChild(dayEl);
-  }
-}
-
-// === Обновление месяца и фон/стих ===
-function updateMonth() {
-  monthTitle.textContent = months[currentMonth];
-  poemMonth.textContent = months[currentMonth];
-  backgroundEl.style.backgroundImage = `url('${monthImages[currentMonth]}')`;
-  poemText.textContent = monthlyPoems[currentLanguage][currentMonth] || '';
-  createCalendar();
-  updateHoroscope(currentDay);
-}
-
-// === Гороскоп по дню ===
-function updateHoroscope(day) {
-  const index = day % leoHoroscope.en.length;
-  horoscopeEl.innerHTML = `
-    <strong>Leo Horoscope</strong><br>
-    <em>Message for day ${day}:</em><br>
-    ${leoHoroscope[currentLanguage][index]}
-  `;
-}
-
-// === Выбор дня ===
-function selectDay(day){
-  currentDay = day;
-  updateMonth();
-}
-
-// === Кнопки смены месяца ===
-document.getElementById("prevMonth").onclick = ()=>{
-  currentMonth = (currentMonth-1+12)%12;
-  currentDay = 1;
-  updateMonth();
-};
-document.getElementById("nextMonth").onclick = ()=>{
-  currentMonth = (currentMonth+1)%12;
-  currentDay = 1;
-  updateMonth();
-};
-
-// === Кнопка смены языка ===
-languageToggle.onclick = ()=>{
-  currentLanguage = currentLanguage==='en'?'ru':'en';
-  localStorage.setItem("lang", currentLanguage);
-  languageToggle.textContent = currentLanguage.toUpperCase();
-  updateMonth();
-};
-
-// === Инициализация ===
-updateMonth();
+const backgroundEl = document.querySelector
