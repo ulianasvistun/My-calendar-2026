@@ -1,108 +1,94 @@
-body, html {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  font-family: 'Georgia', serif;
-  color: #fff;
-}
+document.addEventListener("DOMContentLoaded", () => {
 
-.background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('images/january.jpg'); /* временный фон */
-  background-size: cover;
-  background-position: center;
-  z-index: -1;
-  filter: brightness(0.7);
-}
+  // ---------- НАСТРОЙКИ ----------
+  let lang = "ru"; // начальный язык
+  const monthNames = {
+    ru: ["Январь","Февраль","Март","Апрель","Май","Июнь",
+         "Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"],
+    en: ["January","February","March","April","May","June",
+         "July","August","September","October","November","December"]
+  };
 
-.calendar-container {
-  max-width: 600px;
-  margin: 50px auto;
-  background: rgba(0,0,0,0.4);
-  border-radius: 12px;
-  padding: 20px;
-  text-align: center;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-}
+  const holidays = {
+    "01-01": { ru: "Новый год", en: "New Year" },
+    "03-08": { ru: "Международный женский день", en: "International Women’s Day" },
+    "05-01": { ru: "День труда", en: "Labour Day" },
+    "12-31": { ru: "Канун Нового года", en: "New Year’s Eve" }
+  };
 
-.calendar-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  justify-content: center;
-  margin-bottom: 15px;
-}
+  const leoHoroscope = [
+    { ru: "Сегодня Льву важно прислушаться к себе.", en: "Today Leo should trust intuition." },
+    { ru: "День несёт внутреннюю силу и ясность.", en: "Day brings confidence and clarity." }
+  ];
 
-.calendar-header h1 {
-  flex-grow: 1;
-  font-size: 24px;
-  text-align: center;
-}
+  const thoughts = [
+    { ru: "Мысль дня: делай шаги с уверенностью.", en: "Thought of the day: move with confidence." },
+    { ru: "Мысль дня: наблюдай и учись.", en: "Thought of the day: observe and learn." }
+  ];
 
-button {
-  background: none;
-  border: 1px solid rgba(255,255,255,0.3);
-  color: #fff;
-  padding: 6px 10px;
-  cursor: pointer;
-  border-radius: 6px;
-}
+  const today = new Date();
+  const CURRENT_DAY = today.getDate();
+  const CURRENT_MONTH = today.getMonth();
+  const CURRENT_YEAR = today.getFullYear();
 
-.lang-btn { font-size: 12px; }
+  // ---------- ФОН ----------
+  const monthsBackground = ["January","February","March","April","May","June",
+                            "July","August","September","October","November","December"];
+  const bgPath = `images/${monthsBackground[CURRENT_MONTH]}.jpeg`;
+  const img = new Image();
+  img.src = bgPath;
+  img.onload = () => document.body.style.backgroundImage = `url("${bgPath}")`;
+  img.onerror = () => document.body.style.backgroundColor = "#333";
 
-.weekdays {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  background: rgba(255,255,255,0.1);
-  padding: 10px 0;
-  border-radius: 6px;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
+  // ---------- РЕНДЕР КАЛЕНДАРЯ ----------
+  const monthNameEl = document.querySelector(".month-name");
+  const calendarEl = document.querySelector(".calendar");
 
-.weekdays div { text-align: center; }
+  function renderCalendar(month, year) {
+    calendarEl.innerHTML = "";
+    monthNameEl.textContent = monthNames[lang][month];
 
-.calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 3px;
-}
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-.calendar-grid .day {
-  background: rgba(255,255,255,0.1);
-  padding: 15px 0;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: transform 0.2s, background 0.2s;
-}
+    for (let day = 1; day <= daysInMonth; day++) {
+      const cell = document.createElement("div");
+      cell.className = "day";
+      cell.textContent = day;
 
-.calendar-grid .day:hover {
-  transform: scale(1.05);
-  background: rgba(255,255,255,0.2);
-}
+      if(day === CURRENT_DAY) cell.classList.add("today");
 
-.day.today {
-  border: 2px solid #ffb84d;
-}
+      const key = `${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+      if(holidays[key]) {
+        const dot = document.createElement("div");
+        dot.className = "holiday-dot";
+        cell.appendChild(dot);
+        cell.addEventListener("click", () => showHoliday(holidays[key]));
+      }
 
-.power-day::after {
-  content: " ✦";
-  color: #ffb84d;
-  font-size: 12px;
-  opacity: 0.8;
-}
+      cell.addEventListener("click", () => showDay(day));
+      calendarEl.appendChild(cell);
+    }
+  }
 
-.poem-container {
-  margin-top: 15px;
-  border-top: 1px solid rgba(255,255,255,0.3);
-  padding-top: 10px;
-}
+  function showDay(day) {
+    document.querySelector(".horoscope").textContent = leoHoroscope[day%leoHoroscope.length][lang];
+    document.querySelector(".thought").textContent = thoughts[day%thoughts.length][lang];
+    document.querySelector(".holiday").textContent = "";
+  }
 
-.poem-container p, .horoscope {
-  font-size: 15px;
-  line-height: 1.6;
-}
+  function showHoliday(holiday) {
+    document.querySelector(".holiday").textContent = holiday[lang];
+  }
+
+  renderCalendar(CURRENT_MONTH, CURRENT_YEAR);
+  showDay(CURRENT_DAY);
+
+  // ---------- ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА ----------
+  document.getElementById("langBtn").addEventListener("click", () => {
+    lang = (lang==="ru")?"en":"ru";
+    document.getElementById("langBtn").textContent = (lang==="ru")?"EN":"RU";
+    renderCalendar(CURRENT_MONTH, CURRENT_YEAR);
+    showDay(CURRENT_DAY);
+  });
+
+});
