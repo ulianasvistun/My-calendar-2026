@@ -1,94 +1,185 @@
-document.addEventListener("DOMContentLoaded", () => {
+// === Дата и язык ===
+let currentDate = new Date();
+let currentMonth = currentDate.getMonth(); // 0-11
+let currentDay = currentDate.getDate();
+let currentLanguage = localStorage.getItem("lang") || "en";
 
-  // ---------- НАСТРОЙКИ ----------
-  let lang = "ru"; // начальный язык
-  const monthNames = {
-    ru: ["Январь","Февраль","Март","Апрель","Май","Июнь",
-         "Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"],
-    en: ["January","February","March","April","May","June",
-         "July","August","September","October","November","December"]
-  };
+// === Месяцы ===
+const months = [
+  "January","February","March","April","May","June",
+  "July","August","September","October","November","December"
+];
 
-  const holidays = {
-    "01-01": { ru: "Новый год", en: "New Year" },
-    "03-08": { ru: "Международный женский день", en: "International Women’s Day" },
-    "05-01": { ru: "День труда", en: "Labour Day" },
-    "12-31": { ru: "Канун Нового года", en: "New Year’s Eve" }
-  };
+const weekdaysEn = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const weekdaysRu = ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"];
 
-  const leoHoroscope = [
-    { ru: "Сегодня Льву важно прислушаться к себе.", en: "Today Leo should trust intuition." },
-    { ru: "День несёт внутреннюю силу и ясность.", en: "Day brings confidence and clarity." }
-  ];
+// === Фоновые изображения месяцев ===
+const monthImages = [
+  'images/january.jpg',
+  'images/february.jpg',
+  'images/march.jpg',
+  'images/april.jpg',
+  'images/may.jpg',
+  'images/june.jpg',
+  'images/july.jpg',
+  'images/august.jpg',
+  'images/september.jpg',
+  'images/october.jpg',
+  'images/november.jpg',
+  'images/december.jpg'
+];
 
-  const thoughts = [
-    { ru: "Мысль дня: делай шаги с уверенностью.", en: "Thought of the day: move with confidence." },
-    { ru: "Мысль дня: наблюдай и учись.", en: "Thought of the day: observe and learn." }
-  ];
+// === Стихи месяца ===
+const monthlyPoems = {
+  en: {
+    0: "The air stands still...",
+    1: "Cold sharpens thought...",
+    2: "The earth exhales...",
+    3: "The days grow careless...",
+    4: "Everything begins to listen...",
+    5: "Light stretches endlessly...",
+    6: "Warm air carries unsaid things...",
+    7: "Everything ripens at once...",
+    8: "The world becomes clearer...",
+    9: "Wind interrupts thoughts...",
+    10: "The light withdraws...",
+    11: "Time folds inward..."
+  },
+  ru: {
+    0: "Воздух замирает...",
+    1: "Холод обостряет мысли...",
+    2: "Земля выдыхает...",
+    3: "Дни становятся беспечными...",
+    4: "Всё начинает слушать...",
+    5: "Свет растягивается бесконечно...",
+    6: "Тёплый воздух несёт несказанное...",
+    7: "Всё созревает сразу...",
+    8: "Мир становится яснее...",
+    9: "Ветер прерывает мысли...",
+    10: "Свет уходит...",
+    11: "Время сворачивается внутрь..."
+  }
+};
 
-  const today = new Date();
-  const CURRENT_DAY = today.getDate();
-  const CURRENT_MONTH = today.getMonth();
-  const CURRENT_YEAR = today.getFullYear();
+// === Гороскоп Льва ===
+const leoHoroscope = {
+  en: [
+    "Today is about calm confidence.",
+    "Focus on what truly matters.",
+    "Let reflection guide your choices.",
+    "Your energy is noticed.",
+    "Finish what you’ve postponed.",
+    "Lead with patience.",
+    "Creativity flows best without forcing results.",
+    "Someone may seek your reassurance.",
+    "Trust your intuition.",
+    "Today favors clear boundaries."
+  ],
+  ru: [
+    "Сегодня день спокойной уверенности.",
+    "Сфокусируйся на действительно важном.",
+    "Пусть размышления направляют твои шаги.",
+    "Твоя энергия замечается.",
+    "Закончите то, что откладывали.",
+    "Веди мягко.",
+    "Творчество течет лучше без насилия над результатом.",
+    "Кто-то ищет твоего ободрения.",
+    "Доверяй интуиции.",
+    "Сегодня важны ясные границы."
+  ]
+};
 
-  // ---------- ФОН ----------
-  const monthsBackground = ["January","February","March","April","May","June",
-                            "July","August","September","October","November","December"];
-  const bgPath = `images/${monthsBackground[CURRENT_MONTH]}.jpeg`;
-  const img = new Image();
-  img.src = bgPath;
-  img.onload = () => document.body.style.backgroundImage = `url("${bgPath}")`;
-  img.onerror = () => document.body.style.backgroundColor = "#333";
+// === Сильные дни Льва ✦ ===
+const leoPowerDays = [1,5,8,10,14,17,19,22,25,28];
 
-  // ---------- РЕНДЕР КАЛЕНДАРЯ ----------
-  const monthNameEl = document.querySelector(".month-name");
-  const calendarEl = document.querySelector(".calendar");
+// === DOM элементы ===
+const monthTitle = document.getElementById("monthTitle");
+const poemMonth = document.getElementById("poemMonth");
+const poemText = document.getElementById("poemText");
+const horoscopeEl = document.getElementById("horoscope");
+const languageToggle = document.getElementById("languageToggle");
+const calendarGrid = document.getElementById("calendarGrid");
+const backgroundEl = document.querySelector(".background");
 
-  function renderCalendar(month, year) {
-    calendarEl.innerHTML = "";
-    monthNameEl.textContent = monthNames[lang][month];
+// === Создание сетки календаря ===
+function createCalendar() {
+  calendarGrid.innerHTML = '';
 
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
+  // Число дней в текущем месяце
+  const daysInMonth = new Date(currentDate.getFullYear(), currentMonth+1, 0).getDate();
+  const firstDayIndex = new Date(currentDate.getFullYear(), currentMonth, 1).getDay();
 
-    for (let day = 1; day <= daysInMonth; day++) {
-      const cell = document.createElement("div");
-      cell.className = "day";
-      cell.textContent = day;
-
-      if(day === CURRENT_DAY) cell.classList.add("today");
-
-      const key = `${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-      if(holidays[key]) {
-        const dot = document.createElement("div");
-        dot.className = "holiday-dot";
-        cell.appendChild(dot);
-        cell.addEventListener("click", () => showHoliday(holidays[key]));
-      }
-
-      cell.addEventListener("click", () => showDay(day));
-      calendarEl.appendChild(cell);
-    }
+  // Пустые ячейки до 1-го числа
+  for(let i=0; i<firstDayIndex; i++){
+    const emptyDiv = document.createElement('div');
+    calendarGrid.appendChild(emptyDiv);
   }
 
-  function showDay(day) {
-    document.querySelector(".horoscope").textContent = leoHoroscope[day%leoHoroscope.length][lang];
-    document.querySelector(".thought").textContent = thoughts[day%thoughts.length][lang];
-    document.querySelector(".holiday").textContent = "";
+  for(let i=1; i<=daysInMonth; i++){
+    const dayDiv = document.createElement('div');
+    dayDiv.classList.add('day');
+    dayDiv.textContent = i;
+    dayDiv.dataset.day = i;
+
+    if(leoPowerDays.includes(i)) dayDiv.classList.add('power-day');
+    if(i === currentDay) dayDiv.classList.add('today');
+
+    dayDiv.onclick = () => selectDay(i);
+    calendarGrid.appendChild(dayDiv);
+  }
+}
+
+// === Обновление месяца, фона, стихов ===
+function updateMonth() {
+  monthTitle.textContent = months[currentMonth];
+  poemMonth.textContent = months[currentMonth];
+  poemText.textContent = monthlyPoems[currentLanguage][currentMonth] || '';
+
+  // Обновляем фон
+  if(monthImages[currentMonth]){
+    backgroundEl.style.backgroundImage = `url('${monthImages[currentMonth]}')`;
   }
 
-  function showHoliday(holiday) {
-    document.querySelector(".holiday").textContent = holiday[lang];
-  }
+  createCalendar();
+  updateHoroscope(currentDay);
+}
 
-  renderCalendar(CURRENT_MONTH, CURRENT_YEAR);
-  showDay(CURRENT_DAY);
+// === Гороскоп по дню ===
+function updateHoroscope(day) {
+  const index = day % leoHoroscope.en.length;
+  horoscopeEl.innerHTML = `
+    <strong>Leo Horoscope</strong><br>
+    <em>Message for day ${day}:</em><br>
+    ${leoHoroscope[currentLanguage][index]}
+  `;
+}
 
-  // ---------- ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА ----------
-  document.getElementById("langBtn").addEventListener("click", () => {
-    lang = (lang==="ru")?"en":"ru";
-    document.getElementById("langBtn").textContent = (lang==="ru")?"EN":"RU";
-    renderCalendar(CURRENT_MONTH, CURRENT_YEAR);
-    showDay(CURRENT_DAY);
-  });
+// === Выбор дня ===
+function selectDay(day){
+  currentDay = day;
+  updateMonth();
+}
 
-});
+// === Кнопки смены месяца ===
+document.getElementById("prevMonth").onclick = () => {
+  currentMonth = (currentMonth-1+12) % 12;
+  currentDay = 1;
+  updateMonth();
+};
+
+document.getElementById("nextMonth").onclick = () => {
+  currentMonth = (currentMonth+1) % 12;
+  currentDay = 1;
+  updateMonth();
+};
+
+// === Кнопка смены языка ===
+languageToggle.onclick = () => {
+  currentLanguage = currentLanguage==='en'?'ru':'en';
+  localStorage.setItem("lang", currentLanguage);
+  languageToggle.textContent = currentLanguage.toUpperCase();
+  updateMonth();
+};
+
+// === Инициализация ===
+updateMonth();
