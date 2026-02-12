@@ -28,39 +28,6 @@ const monthImages = [
   'images/november.jpg',
   'images/december.jpg'
 ];
-
-// === Стихи месяца ===
-const monthlyPoems = {
-  en: {
-    0: "The air stands still...",
-    1: "Cold sharpens thought...",
-    2: "The earth exhales...",
-    3: "The days grow careless...",
-    4: "Everything begins to listen...",
-    5: "Light stretches endlessly...",
-    6: "Warm air carries unsaid things...",
-    7: "Everything ripens at once...",
-    8: "The world becomes clearer...",
-    9: "Wind interrupts thoughts...",
-    10: "The light withdraws...",
-    11: "Time folds inward..."
-  },
-  ru: {
-    0: "Воздух замирает...",
-    1: "Холод обостряет мысли...",
-    2: "Земля выдыхает...",
-    3: "Дни становятся беспечными...",
-    4: "Всё начинает слушать...",
-    5: "Свет растягивается бесконечно...",
-    6: "Тёплый воздух несёт несказанное...",
-    7: "Всё созревает сразу...",
-    8: "Мир становится яснее...",
-    9: "Ветер прерывает мысли...",
-    10: "Свет уходит...",
-    11: "Время сворачивается внутрь..."
-  }
-};
-
 // === Гороскоп Льва ===
 const leoHoroscope = {
   en: [
@@ -180,6 +147,11 @@ languageToggle.onclick = () => {
   languageToggle.textContent = currentLanguage.toUpperCase();
   updateMonth();
 };
-
+const holidays = {
+    "01-01": { ru: "Новый год", en: "New Year" },
+    "03-08": { ru: "Международный женский день", en: "International Women’s Day" },
+    "05-01": { ru: "День труда", en: "Labour Day" },
+    "12-31": { ru: "Канун Нового года", en: "New Year’s Eve" }
+  };
 // === Инициализация ===
 updateMonth();
