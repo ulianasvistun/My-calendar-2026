@@ -1,44 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Living Calendar DLC</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Календарь</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="calendar-container">
-  <img id="monthBackground" src="images/jan.jpg" alt="Month Background">
-  <div class="calendar-overlay">
-    <div class="calendar-header">
-      <button id="prevMonth">&#8592;</button>
-      <h1 id="monthName">January</h1>
-      <button id="nextMonth">&#8594;</button>
-      <button id="languageBtn">EN</button>
-    </div>
+  <!-- Языковая кнопка -->
+  <button id="langBtn">EN</button>
 
-    <table id="calendarTable">
-      <thead>
-        <tr>
-          <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>
-        </tr>
-      </thead>
-      <tbody id="calendarBody"></tbody>
-    </table>
+  <!-- Месяц -->
+  <h1 class="month-name"></h1>
 
-    <div class="horoscope-container">
-      <h2>Leo Horoscope</h2>
-      <div id="horoscopeText">Message for today</div>
+  <!-- Календарь -->
+  <div class="calendar-container">
+    <div class="week-days">
+      <div>Sun</div><div>Mon</div><div>Tue</div>
+      <div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
     </div>
-
-    <div class="poem-container">
-      <h2 id="poemMonth">January Poem</h2>
-      <div id="poemBox"></div>
-    </div>
+    <div class="calendar"></div>
   </div>
-</div>
 
-<script src="script.js"></script>
+  <!-- Блок контента дня -->
+  <div class="day-content">
+    <div class="horoscope"></div>
+    <div class="thought"></div>
+    <div class="holiday"></div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
