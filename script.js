@@ -1,113 +1,223 @@
-window.onload = function() {
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
+let currentDay = new Date().getDate();
+let currentLanguage = 'en';
 
-  let currentDate = new Date();
-  let currentMonth = currentDate.getMonth();
-  let currentDay = currentDate.getDate();
-  let currentLanguage = localStorage.getItem("lang") || "en";
+const monthNames = {
+  en: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+  ru: ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь']
+};
 
-  const months = [
-    "January","February","March","April","May","June",
-    "July","August","September","October","November","December"
-  ];
+const monthImages = ['january.jpg','february.jpg','march.jpg','april.jpg','may.jpg','june.jpg','july.jpg','august.jpg','september.jpg','october.jpg','november.jpg','december.jpg'];
 
-  const monthImages = [
-    'images/january.jpg',
-    'images/february.jpg',
-    'images/march.jpg',
-    'images/april.jpg',
-    'images/may.jpg',
-    'images/june.jpg',
-    'images/july.jpg',
-    'images/august.jpg',
-    'images/september.jpg',
-    'images/october.jpg',
-    'images/november.jpg',
-    'images/december.jpg'
-  ];
+// Стихи на каждый день месяца (пример для января)
+const monthlyPoemsByDay = {
+  en: [
+    "Pushkin: The air stands still...",
+    "Yesenin: Cold sharpens thought...",
+    "Mayakovsky: The earth exhales...",
+    "Brodsky: The days grow careless...",
+    "Pushkin: Another line for day 5...",
+    "Yesenin: Another line for day 6...",
+    "Mayakovsky: Another line for day 7...",
+    "Brodsky: Another line for day 8...",
+    "Pushkin: Another line for day 9...",
+    "Yesenin: Another line for day 10...",
+    "Mayakovsky: Another line for day 11...",
+    "Brodsky: Another line for day 12...",
+    "Pushkin: Another line for day 13...",
+    "Yesenin: Another line for day 14...",
+    "Mayakovsky: Another line for day 15...",
+    "Brodsky: Another line for day 16...",
+    "Pushkin: Another line for day 17...",
+    "Yesenin: Another line for day 18...",
+    "Mayakovsky: Another line for day 19...",
+    "Brodsky: Another line for day 20...",
+    "Pushkin: Another line for day 21...",
+    "Yesenin: Another line for day 22...",
+    "Mayakovsky: Another line for day 23...",
+    "Brodsky: Another line for day 24...",
+    "Pushkin: Another line for day 25...",
+    "Yesenin: Another line for day 26...",
+    "Mayakovsky: Another line for day 27...",
+    "Brodsky: Another line for day 28...",
+    "Pushkin: Another line for day 29...",
+    "Yesenin: Another line for day 30...",
+    "Mayakovsky: Another line for day 31..."
+  ],
+  ru: [
+    "Пушкин: Воздух замирает...",
+    "Есенин: Холод обостряет мысли...",
+    "Маяковский: Земля выдыхает...",
+    "Бродский: Дни становятся беспечными...",
+    "Пушкин: Еще строки для 5-го дня...",
+    "Есенин: Еще строки для 6-го дня...",
+    "Маяковский: Еще строки для 7-го дня...",
+    "Бродский: Еще строки для 8-го дня...",
+    "Пушкин: Еще строки для 9-го дня...",
+    "Есенин: Еще строки для 10-го дня...",
+    "Маяковский: Еще строки для 11-го дня...",
+    "Бродский: Еще строки для 12-го дня...",
+    "Пушкин: Еще строки для 13-го дня...",
+    "Есенин: Еще строки для 14-го дня...",
+    "Маяковский: Еще строки для 15-го дня...",
+    "Бродский: Еще строки для 16-го дня...",
+    "Пушкин: Еще строки для 17-го дня...",
+    "Есенин: Еще строки для 18-го дня...",
+    "Маяковский: Еще строки для 19-го дня...",
+    "Бродский: Еще строки для 20-го дня...",
+    "Пушкин: Еще строки для 21-го дня...",
+    "Есенин: Еще строки для 22-го дня...",
+    "Маяковский: Еще строки для 23-го дня...",
+    "Бродский: Еще строки для 24-го дня...",
+    "Пушкин: Еще строки для 25-го дня...",
+    "Есенин: Еще строки для 26-го дня...",
+    "Маяковский: Еще строки для 27-го дня...",
+    "Бродский: Еще строки для 28-го дня...",
+    "Пушкин: Еще строки для 29-го дня...",
+    "Есенин: Еще строки для 30-го дня...",
+    "Маяковский: Еще строки для 31-го дня..."
+  ]
+};
 
-  const monthlyPoems = {
-    en: {
-      0:"The air stands still...",1:"Cold sharpens thought...",2:"The earth exhales...",
-      3:"The days grow careless...",4:"Everything begins to listen...",5:"Light stretches endlessly...",
-      6:"Warm air carries unsaid things...",7:"Everything ripens at once...",8:"The world becomes clearer...",
-      9:"Wind interrupts thoughts...",10:"The light withdraws...",11:"Time folds inward..."
-    },
-    ru: {
-      0:"Воздух замирает...",1:"Холод обостряет мысли...",2:"Земля выдыхает...",
-      3:"Дни становятся беспечными...",4:"Всё начинает слушать...",5:"Свет растягивается бесконечно...",
-      6:"Тёплый воздух несёт несказанное...",7:"Всё созревает сразу...",8:"Мир становится яснее...",
-      9:"Ветер прерывает мысли...",10:"Свет уходит...",11:"Время сворачивается внутрь..."
+// Гороскоп Льва
+const horoscopeByDay = {
+  en: [
+    "Leo: Today is your day! Be bold.",
+    "Leo: Luck favors your courage.",
+    "Leo: Focus on creativity.",
+    "Leo: Take time to rest and reflect.",
+    "Leo: Stay positive and confident.",
+    "Leo: A small surprise awaits you.",
+    "Leo: Trust your intuition.",
+    "Leo: Collaborate with someone today.",
+    "Leo: Take a walk outside.",
+    "Leo: Creative energy is high.",
+    "Leo: Smile and attract good vibes.",
+    "Leo: Be patient and calm.",
+    "Leo: Try something new.",
+    "Leo: Pay attention to details.",
+    "Leo: Focus on personal growth.",
+    "Leo: Reconnect with a friend.",
+    "Leo: Organize your space.",
+    "Leo: Be adventurous today.",
+    "Leo: Reflect on achievements.",
+    "Leo: Express gratitude.",
+    "Leo: Avoid distractions.",
+    "Leo: Take care of health.",
+    "Leo: Read something inspiring.",
+    "Leo: Share positivity.",
+    "Leo: Challenge yourself gently.",
+    "Leo: Seek balance in tasks.",
+    "Leo: Listen to music.",
+    "Leo: Be mindful and present.",
+    "Leo: Plan a creative project.",
+    "Leo: Celebrate small wins.",
+    "Leo: Relax and recharge."
+  ],
+  ru: [
+    "Лев: Сегодня твой день! Будь смелым.",
+    "Лев: Удача благоволит твоей храбрости.",
+    "Лев: Сосредоточься на творчестве.",
+    "Лев: Найди время для отдыха и размышлений.",
+    "Лев: Сохраняй позитив и уверенность.",
+    "Лев: Маленький сюрприз ждёт тебя.",
+    "Лев: Доверься своей интуиции.",
+    "Лев: Сотрудничай с кем-то сегодня.",
+    "Лев: Прогуляйся на улице.",
+    "Лев: Творческая энергия на высоте.",
+    "Лев: Улыбайся и привлекай позитив.",
+    "Лев: Будь терпелив и спокоен.",
+    "Лев: Попробуй что-то новое.",
+    "Лев: Обрати внимание на детали.",
+    "Лев: Сосредоточься на личном росте.",
+    "Лев: Воссоединись с другом.",
+    "Лев: Приведи пространство в порядок.",
+    "Лев: Будь сегодня авантюрным.",
+    "Лев: Проанализируй достижения.",
+    "Лев: Выражай благодарность.",
+    "Лев: Избегай отвлекающих факторов.",
+    "Лев: Заботься о здоровье.",
+    "Лев: Почитай что-то вдохновляющее.",
+    "Лев: Делись позитивом.",
+    "Лев: Мягко брось себе вызов.",
+    "Лев: Ищи баланс в делах.",
+    "Лев: Слушай музыку.",
+    "Лев: Будь внимателен и осознан.",
+    "Лев: Планируй творческий проект.",
+    "Лев: Отмечай маленькие победы.",
+    "Лев: Расслабься и восстановись."
+  ]
+};
+
+const languageBtn = document.getElementById('languageBtn');
+const monthNameElem = document.getElementById('monthName');
+const monthBackground = document.getElementById('monthBackground');
+const calendarBody = document.getElementById('calendarBody');
+const poemBox = document.getElementById('poemBox');
+const horoscopeText = document.getElementById('horoscopeText');
+
+function updateCalendar(){
+  monthNameElem.textContent = monthNames[currentLanguage][currentMonth];
+  monthBackground.src = 'images/' + monthImages[currentMonth];
+
+  calendarBody.innerHTML = '';
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+  const daysInMonth = new Date(currentYear, currentMonth+1,0).getDate();
+
+  let date = 1;
+  for(let i=0;i<6;i++){
+    const row = document.createElement('tr');
+    for(let j=0;j<7;j++){
+      const cell = document.createElement('td');
+      if(i===0 && j<firstDay){
+        cell.textContent = '';
+      } else if(date>daysInMonth){
+        cell.textContent = '';
+      } else {
+        cell.textContent = date;
+        if(date === currentDay){
+          cell.classList.add('current-day');
+        }
+        if(date===15){cell.textContent += ' ✦';} // пример особого дня
+        cell.addEventListener('click',()=>{updatePoem(date); updateHoroscope(date);});
+        date++;
+      }
+      row.appendChild(cell);
     }
-  };
-
-  const leoHoroscope = {
-    en:["Today is about calm confidence.","Focus on what truly matters.","Let reflection guide your choices.","Your energy is noticed.","Finish what you’ve postponed.","Lead with patience.","Creativity flows best without forcing results.","Someone may seek your reassurance.","Trust your intuition.","Today favors clear boundaries."],
-    ru:["Сегодня день спокойной уверенности.","Сфокусируйся на действительно важном.","Пусть размышления направляют твои шаги.","Твоя энергия замечается.","Закончите то, что откладывали.","Веди мягко.","Творчество течет лучше без насилия над результатом.","Кто-то ищет твоего ободрения.","Доверяй интуиции.","Сегодня важны ясные границы."]
-  };
-
-  const leoPowerDays = [1,5,8,10,14,17,19,22,25,28];
-
-  const monthTitle = document.getElementById("monthTitle");
-  const poemMonth = document.getElementById("poemMonth");
-  const poemText = document.getElementById("poemText");
-  const horoscopeEl = document.getElementById("horoscope");
-  const languageToggle = document.getElementById("languageToggle");
-  const calendarGrid = document.getElementById("calendarGrid");
-  const backgroundEl = document.querySelector(".background");
-
-  function createCalendar(){
-    calendarGrid.innerHTML = '';
-    const daysInMonth = new Date(currentDate.getFullYear(), currentMonth+1, 0).getDate();
-    const firstDay = new Date(currentDate.getFullYear(), currentMonth, 1).getDay();
-
-    for(let i=0;i<firstDay;i++){
-      const emptyDiv = document.createElement('div');
-      calendarGrid.appendChild(emptyDiv);
-    }
-
-    for(let i=1;i<=daysInMonth;i++){
-      const dayDiv = document.createElement('div');
-      dayDiv.classList.add('day');
-      dayDiv.textContent = i;
-      if(i===currentDay) dayDiv.classList.add('today');
-      if(leoPowerDays.includes(i)) dayDiv.classList.add('power-day');
-      dayDiv.onclick = ()=>{currentDay=i; updateMonth();}
-      calendarGrid.appendChild(dayDiv);
-    }
+    calendarBody.appendChild(row);
   }
 
-  function updateMonth(){
-    monthTitle.textContent = months[currentMonth];
-    poemMonth.textContent = months[currentMonth];
-    poemText.textContent = monthlyPoems[currentLanguage][currentMonth];
-    if(monthImages[currentMonth]) backgroundEl.style.backgroundImage = `url('${monthImages[currentMonth]}')`;
-    createCalendar();
-    updateHoroscope(currentDay);
-  }
-
-  function updateHoroscope(day){
-    const index = day % leoHoroscope.en.length;
-    horoscopeEl.innerHTML = `<strong>Leo Horoscope</strong><br><em>Message for day ${day}:</em><br>${leoHoroscope[currentLanguage][index]}`;
-  }
-
-  document.getElementById("prevMonth").onclick = ()=>{
-    currentMonth=(currentMonth-1+12)%12;
-    currentDay=1;
-    updateMonth();
-  }
-
-  document.getElementById("nextMonth").onclick = ()=>{
-    currentMonth=(currentMonth+1)%12;
-    currentDay=1;
-    updateMonth();
-  }
-
-  languageToggle.onclick = ()=>{
-    currentLanguage = currentLanguage==='en'?'ru':'en';
-    localStorage.setItem("lang", currentLanguage);
-    languageToggle.textContent = currentLanguage.toUpperCase();
-    updateMonth();
-  }
-
-  updateMonth();
+  updatePoem(currentDay);
+  updateHoroscope(currentDay);
 }
+
+function updatePoem(day){
+  const poems = monthlyPoemsByDay[currentLanguage];
+  const index = (day-1) % poems.length;
+  poemBox.innerHTML = poems[index];
+}
+
+function updateHoroscope(day){
+  const horoscopes = horoscopeByDay[currentLanguage];
+  const index = (day-1) % horoscopes.length;
+  horoscopeText.innerHTML = horoscopes[index];
+}
+
+document.getElementById('prevMonth').addEventListener('click',()=>{
+  currentMonth = (currentMonth+11)%12;
+  updateCalendar();
+});
+
+document.getElementById('nextMonth').addEventListener('click',()=>{
+  currentMonth = (currentMonth+1)%12;
+  updateCalendar();
+});
+
+languageBtn.addEventListener('click',()=>{
+  currentLanguage = (currentLanguage==='en')?'ru':'en';
+  languageBtn.textContent = (currentLanguage==='en')?'EN':'RU';
+  updateCalendar();
+});
+
+updateCalendar();
