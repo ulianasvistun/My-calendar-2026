@@ -16,13 +16,13 @@ body, html {
   background-size: cover;
   background-position: center;
   z-index: -1;
-  filter: brightness(0.7);
+  /* filter: brightness(0.7); */ /* фильтр затемнения удалён */
 }
 
 .calendar-container {
   max-width: 600px;
   margin: 50px auto;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0,0,0,0.35); /* таблица прозрачная, чуть затемнённая для читаемости */
   border-radius: 12px;
   padding: 20px;
   text-align: center;
