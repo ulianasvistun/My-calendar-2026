@@ -1,0 +1,129 @@
+body {
+  margin: 0;
+  font-family: 'Georgia', serif;
+  background: radial-gradient(circle at center, #0f1115, #1a1d24);
+  animation: pulseBackground 8s ease-in-out infinite alternate;
+  color: #f5f5f5;
+}
+
+@keyframes pulseBackground {
+  0% { background-color: #0f1115; }
+  50% { background-color: #1a1d24; }
+  100% { background-color: #0f1115; }
+}
+
+.calendar-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  background: rgba(0,0,0,0.4);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.calendar-header h1 {
+  flex-grow: 1;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 400;
+}
+
+button {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  padding: 6px 10px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.lang-btn {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.calendar-bg {
+  width: 100%;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-bottom: 20px;
+}
+
+.calendar-grid .day {
+  background: rgba(255,255,255,0.1);
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.calendar-grid .day:hover {
+  transform: scale(1.05);
+  background: rgba(255,255,255,0.2);
+}
+
+.power-day::after {
+  content: " ✦";
+  color: #ffb84d;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.poem-container {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+.poem-container h2 {
+  font-size: 16px;
+  opacity: 0.6;
+  margin-bottom: 5px;
+}
+
+.poem-container p {
+  font-size: 15px;
+  line-height: 1.6;
+  white-space: pre-line;
+  animation: fadeIn 0.6s ease;
+}
+
+.horoscope {
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0.9;
+  animation: fadeIn 0.6s ease;
+}
+
+.fade-horoscope {
+  animation: horoscopeFade 0.6s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes horoscopeFade {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
